@@ -1,10 +1,7 @@
 package jorge.arada
 
-case class LogDocument (
-  msg: LogElement
+class LogDocument(
+  val message: Option[String],
+  val data: java.util.HashMap[String, Any]
 )
-
-case class LogElement(
-  message: Option[String],
-  data: Map[String,Any]
-)
+  extends Serializable

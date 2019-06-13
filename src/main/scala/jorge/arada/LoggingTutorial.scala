@@ -11,7 +11,7 @@ object LoggingTutorial
 
   val json =
 
-    """{"Data": {"esta_key":"este value"}}"""
+    """{"Alfaces": {"esta_key":"este value"}}"""
 
   logger.info(json,a)
 

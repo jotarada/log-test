@@ -19,33 +19,42 @@ class MessagingLogsProvider
     val message: String = event.getMessage
     val throwable = event.getThrowableProxy
     val jsonMap: util.HashMap[String, Any] = Try(getMessageAsJson(message)).getOrElse(new util.HashMap[String, Any]())
+    val stackStrace = Try(throwable.getMessage).getOrElse(null)
 
-    if(!jsonMap.isEmpty) {
-      if(throwable != null) {
+    val logMessage = createLogMessage(jsonMap, stackStrace, message)
+    val a = new util.HashMap[String, Any]()
+    a.put("Message",logMessage.message.getOrElse(null))
+    a.put("Data",logMessage.data)
 
-        val stackTrace = throwable.getMessage
-
-        checkForData(jsonMap).put("StackTrace", stackTrace)
-      }
-    }
-    else {
-    }
-    generator.writeObjectField("Msg", jsonData)
-  }
-
-  private def checkForData(jsonMap: util.HashMap[String, Any]): util.HashMap[String, Any] = {
-
-    if(jsonMap.containsKey("Data")) {
-
-      jsonMap.get("Data").asInstanceOf[util.HashMap[String, Any]]
-    }
-    else {
-      jsonMap
-    }
+    generator.writeObjectField("Msg", a)
   }
 
   private def getMessageAsJson(message: String): util.HashMap[String, Any] = {
 
     objectMapper.readValue(message, classOf[util.HashMap[String, Any]])
+  }
+
+  private def createLogMessage(jsonMap: util.HashMap[String, Any], stackStrace: String, message: String): LogDocument = {
+
+    if(!jsonMap.isEmpty) {
+      if(stackStrace != null) {
+        jsonMap.put("StackTrace", stackStrace)
+      }
+
+      new LogDocument(
+        message = None,
+        data = jsonMap
+      )
+    }
+    else {
+      if(stackStrace != null) {
+        jsonMap.put("StackTrace", stackStrace)
+      }
+
+      new LogDocument(
+        message = Some(message),
+        data = jsonMap
+      )
+    }
   }
 }
