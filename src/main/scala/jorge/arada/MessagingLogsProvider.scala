@@ -2,7 +2,7 @@ package jorge.arada
 
 import java.util
 
-import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.classic.spi.{ILoggingEvent, StackTraceElementProxy}
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
 import net.logstash.logback.composite.AbstractJsonProvider
@@ -24,7 +24,7 @@ class MessagingLogsProvider
 
     throwable.foreach(
       x => {
-        data.put("StackTrace", x.getMessage)
+        data.put("StackTrace", s"${x.getMessage} \n ${toString(x.getStackTraceElementProxyArray)}")
       }
     )
 
@@ -39,5 +39,11 @@ class MessagingLogsProvider
   private def getMessageAsJson(message: String): util.HashMap[String, AnyRef] = {
 
     objectMapper.readValue(message, classOf[util.HashMap[String, AnyRef]])
+  }
+
+  private def toString(stackTraceElementProxyArray: Array[StackTraceElementProxy]): String = {
+
+    val arrayString = stackTraceElementProxyArray.map(x => x.getSTEAsString)
+    arrayString.mkString("\n")
   }
 }
