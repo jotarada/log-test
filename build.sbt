@@ -2,9 +2,7 @@ name := "LoggingTutorial"
 
 version := "0.1"
 
-scalaVersion := "2.12.7"
-
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
+scalaVersion := "2.11.8"
 
 // https://mvnrepository.com/artifact/ch.qos.logback/logback-core
 libraryDependencies += "ch.qos.logback" % "logback-core" % "1.2.3"
@@ -22,3 +20,6 @@ libraryDependencies += "org.slf4j" % "slf4j-simple" % "1.7.26"
 
 // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-scala
 libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9"
+
+libraryDependencies += "org.apache.spark" %% "spark-core" % "2.3.0"
+libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.3.0"

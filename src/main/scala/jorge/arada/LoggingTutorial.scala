@@ -1,11 +1,24 @@
 package jorge.arada
 
+import org.apache.spark.sql.SparkSession
 import org.slf4j.LoggerFactory
 
 object LoggingTutorial
   extends App {
 
   //setDefaultUncaughtExceptionHandler()
+
+  val sparkSession: SparkSession = SparkSession
+    .builder()
+    .getOrCreate()
+
+  import sparkSession.implicits._
+
+  val rdd = sparkSession.sparkContext.parallelize(Seq(1, 2, 3))
+  val ds = sparkSession.createDataset[Int](rdd)
+
+  ds.show()
+
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -16,7 +29,7 @@ object LoggingTutorial
 
     """{"Alfaces": {"esta_key":"este value"}}"""
 
-  logger.info(json,a)
+  logger.info(json, a)
 
   //logger.info("Hello there!",a)
 
@@ -28,23 +41,23 @@ object LoggingTutorial
 
   /*logger.info("Este erro", a)*/
 
-/*  def setDefaultUncaughtExceptionHandler(): Unit = {
+  /*  def setDefaultUncaughtExceptionHandler(): Unit = {
 
-    try {
-      Thread.setDefaultUncaughtExceptionHandler(
-        (t: Thread, e: Throwable) => {
-          e match {
-            case
-              a: Exception => logger.error("Uncaught Exception detected in thread " + t, a)
+      try {
+        Thread.setDefaultUncaughtExceptionHandler(
+          (t: Thread, e: Throwable) => {
+            e match {
+              case
+                a: Exception => logger.error("Uncaught Exception detected in thread " + t, a)
+            }
           }
-        }
-      )
-    }
-    catch {
-      case e: SecurityException =>
-        logger.error("Could not set the Default Uncaught Exception Handler", e)
-    }
-  }*/
+        )
+      }
+      catch {
+        case e: SecurityException =>
+          logger.error("Could not set the Default Uncaught Exception Handler", e)
+      }
+    }*/
 }
 
 
